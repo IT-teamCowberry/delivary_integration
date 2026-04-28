@@ -1,0 +1,250 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-04-27 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "environment",
+  "credentials_section",
+  "api_token",
+  "client_name",
+  "credentials_column_break",
+  "default_pickup_pincode",
+  "endpoints_section",
+  "sandbox_base_url",
+  "production_base_url",
+  "endpoints_column_break",
+  "tracking_url_template",
+  "endpoints_paths_section",
+  "pincode_check_path",
+  "waybill_fetch_path",
+  "shipping_charge_path",
+  "endpoints_paths_column_break",
+  "create_shipment_path",
+  "track_shipment_path",
+  "cancel_shipment_path",
+  "packing_slip_path",
+  "package_defaults_section",
+  "default_weight_grams",
+  "default_length_cm",
+  "package_defaults_column_break",
+  "default_width_cm",
+  "default_height_cm",
+  "automation_section",
+  "tracking_poll_interval_hours",
+  "auto_create_on_submit",
+  "shipping_options_section",
+  "default_shipping_mode"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enable Delhivery Integration"
+  },
+  {
+   "default": "Sandbox",
+   "fieldname": "environment",
+   "fieldtype": "Select",
+   "label": "Environment",
+   "options": "Sandbox\nProduction"
+  },
+  {
+   "fieldname": "credentials_section",
+   "fieldtype": "Section Break",
+   "label": "API Credentials"
+  },
+  {
+   "fieldname": "api_token",
+   "fieldtype": "Password",
+   "label": "Delhivery API Token",
+   "mandatory_depends_on": "eval:doc.enabled"
+  },
+  {
+   "fieldname": "client_name",
+   "fieldtype": "Data",
+   "label": "Delhivery Client Name",
+   "description": "Used for waybill fetch (cl param)"
+  },
+  {
+   "fieldname": "credentials_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_pickup_pincode",
+   "fieldtype": "Data",
+   "label": "Default Pickup Pincode"
+  },
+  {
+   "fieldname": "endpoints_section",
+   "fieldtype": "Section Break",
+   "label": "API Base URLs"
+  },
+  {
+   "default": "https://staging-express.delhivery.com",
+   "fieldname": "sandbox_base_url",
+   "fieldtype": "Data",
+   "label": "Sandbox Base URL",
+   "description": "Used when Environment = Sandbox"
+  },
+  {
+   "default": "https://track.delhivery.com",
+   "fieldname": "production_base_url",
+   "fieldtype": "Data",
+   "label": "Production Base URL",
+   "description": "Used when Environment = Production"
+  },
+  {
+   "fieldname": "endpoints_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "https://www.delhivery.com/track/package/{waybill}",
+   "fieldname": "tracking_url_template",
+   "fieldtype": "Data",
+   "label": "Customer Tracking URL Template",
+   "description": "Use {waybill} as placeholder. Example: https://www.delhivery.com/track/package/{waybill}"
+  },
+  {
+   "fieldname": "endpoints_paths_section",
+   "fieldtype": "Section Break",
+   "label": "API Endpoint Paths",
+   "collapsible": 1,
+   "description": "Override these only if Delhivery changes their API paths."
+  },
+  {
+   "default": "/c/api/pin-codes/json/",
+   "fieldname": "pincode_check_path",
+   "fieldtype": "Data",
+   "label": "Pincode Check Path"
+  },
+  {
+   "default": "/waybill/api/bulk/json/",
+   "fieldname": "waybill_fetch_path",
+   "fieldtype": "Data",
+   "label": "Waybill Fetch Path"
+  },
+  {
+   "default": "/api/kinko/v1/invoice/charges/.json",
+   "fieldname": "shipping_charge_path",
+   "fieldtype": "Data",
+   "label": "Shipping Charge Path"
+  },
+  {
+   "fieldname": "endpoints_paths_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "/api/cmu/create.json",
+   "fieldname": "create_shipment_path",
+   "fieldtype": "Data",
+   "label": "Create Shipment Path"
+  },
+  {
+   "default": "/api/v1/packages/json/",
+   "fieldname": "track_shipment_path",
+   "fieldtype": "Data",
+   "label": "Track Shipment Path"
+  },
+  {
+   "default": "/api/p/edit",
+   "fieldname": "cancel_shipment_path",
+   "fieldtype": "Data",
+   "label": "Cancel Shipment Path"
+  },
+  {
+   "default": "/api/p/packing_slip",
+   "fieldname": "packing_slip_path",
+   "fieldtype": "Data",
+   "label": "Packing Slip Path"
+  },
+  {
+   "fieldname": "package_defaults_section",
+   "fieldtype": "Section Break",
+   "label": "Default Package Dimensions"
+  },
+  {
+   "default": "500",
+   "fieldname": "default_weight_grams",
+   "fieldtype": "Int",
+   "label": "Default Package Weight (grams)"
+  },
+  {
+   "default": "10",
+   "fieldname": "default_length_cm",
+   "fieldtype": "Float",
+   "label": "Default Length (cm)"
+  },
+  {
+   "fieldname": "package_defaults_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "10",
+   "fieldname": "default_width_cm",
+   "fieldtype": "Float",
+   "label": "Default Width (cm)"
+  },
+  {
+   "default": "10",
+   "fieldname": "default_height_cm",
+   "fieldtype": "Float",
+   "label": "Default Height (cm)"
+  },
+  {
+   "fieldname": "automation_section",
+   "fieldtype": "Section Break",
+   "label": "Automation"
+  },
+  {
+   "default": "2",
+   "fieldname": "tracking_poll_interval_hours",
+   "fieldtype": "Int",
+   "label": "Tracking Poll Interval (hours)"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_create_on_submit",
+   "fieldtype": "Check",
+   "label": "Auto-create shipment on DN submit"
+  },
+  {
+   "fieldname": "shipping_options_section",
+   "fieldtype": "Section Break",
+   "label": "Shipping Options"
+  },
+  {
+   "default": "E",
+   "fieldname": "default_shipping_mode",
+   "fieldtype": "Select",
+   "label": "Default Shipping Mode",
+   "options": "E\nS",
+   "description": "E = Express (air), S = Surface (road, cheaper). Used when fetching shipping charges."
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-04-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Delhivery Integration",
+ "name": "Delhivery Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,75 @@
+{
+ "actions": [],
+ "creation": "2026-04-27 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "delivery_partner",
+  "enabled",
+  "charge_mode",
+  "pickup_pincode",
+  "pickup_location_name",
+  "own_rider_timeline_options"
+ ],
+ "fields": [
+  {
+   "columns": 2,
+   "fieldname": "delivery_partner",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Delivery Partner",
+   "options": "OWN Rider\nShiprocket\nDelhivery",
+   "reqd": 1
+  },
+  {
+   "columns": 1,
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Enabled"
+  },
+  {
+   "columns": 2,
+   "default": "Manual",
+   "fieldname": "charge_mode",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Charge Mode",
+   "options": "Manual\nFetch from API"
+  },
+  {
+   "columns": 2,
+   "fieldname": "pickup_pincode",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Pickup Pincode"
+  },
+  {
+   "columns": 2,
+   "fieldname": "pickup_location_name",
+   "fieldtype": "Data",
+   "label": "Delhivery Pickup Location Name"
+  },
+  {
+   "default": "Same Day,Tomorrow,6-8 Hours,Next Day",
+   "depends_on": "eval:doc.delivery_partner=='OWN Rider'",
+   "description": "Comma-separated timeline options for OWN Rider",
+   "fieldname": "own_rider_timeline_options",
+   "fieldtype": "Data",
+   "label": "OWN Rider Timeline Options"
+  }
+ ],
+ "istable": 1,
+ "links": [],
+ "modified": "2026-04-27 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Delhivery Integration",
+ "name": "Warehouse Delivery Partner",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

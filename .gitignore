@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+develop-eggs/
+.installed.cfg
+
+# Virtual environments
+venv/
+env/
+.venv/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Frappe
+*.log
+node_modules/
+.sass-cache/
+
+# GitNexus index metadata
+.gitnexus/
+
+# Local secrets / config
+*.local
