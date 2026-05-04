@@ -370,6 +370,29 @@ def get_delhivery_packing_slip(delivery_note):
 
 
 @frappe.whitelist()
+def create_invoice_and_payment(delivery_note):
+    """
+    Manually run the auto-invoice flow for a delivered Delhivery shipment.
+    Used by the Delivery Note "Create Invoice & Payment" button as a fallback
+    for shipments that were already Delivered before the toggle was enabled.
+    """
+    dn = frappe.get_doc("Delivery Note", delivery_note)
+
+    if dn.delivery_partner != "Delhivery":
+        frappe.throw(_("Delivery partner is not Delhivery for this Delivery Note."))
+
+    if dn.delhivery_status != "Delivered":
+        frappe.throw(_("Delhivery status must be 'Delivered' (current: {0}).").format(
+            dn.delhivery_status or "-"
+        ))
+
+    from delhivery_integration.invoicing import handle_delivered, _existing_invoice_for_dn
+
+    handle_delivered(dn.name)
+    return {"sales_invoice": _existing_invoice_for_dn(dn.name)}
+
+
+@frappe.whitelist()
 def get_tracking_info(waybill=None, delivery_note=None):
     """Get tracking info by waybill or delivery note name."""
     if not waybill and delivery_note:

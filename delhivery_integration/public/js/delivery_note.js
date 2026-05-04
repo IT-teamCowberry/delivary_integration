@@ -97,6 +97,30 @@ frappe.ui.form.on("Delivery Note", {
                 );
             }, __("Delhivery"));
         }
+
+        // Button: Create Invoice & Payment (manual fallback for Delivered DNs)
+        if (frm.doc.docstatus === 1
+            && frm.doc.delivery_partner === "Delhivery"
+            && frm.doc.delhivery_status === "Delivered"
+            && (frm.doc.per_billed || 0) < 100) {
+            frm.add_custom_button(__("Create Invoice & Payment"), () => {
+                frappe.call({
+                    method: "delhivery_integration.api.create_invoice_and_payment",
+                    args: { delivery_note: frm.doc.name },
+                    freeze: true,
+                    freeze_message: __("Creating Sales Invoice and Payment Entry..."),
+                    callback(r) {
+                        if (r.message && r.message.sales_invoice) {
+                            frappe.show_alert({
+                                message: __("Sales Invoice {0} created.", [r.message.sales_invoice]),
+                                indicator: "green"
+                            });
+                        }
+                        frm.reload_doc();
+                    }
+                });
+            }, __("Delhivery"));
+        }
     },
 
     // When warehouse changes, refresh available partner options

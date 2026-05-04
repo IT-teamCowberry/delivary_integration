@@ -77,6 +77,22 @@ def update_all_tracking():
                 # Commit per DN so a worker crash doesn't lose previous updates.
                 frappe.db.commit()
 
+                # Auto-create Sales Invoice + Payment Entry on delivery transition
+                if (
+                    mapped_status == "Delivered"
+                    and dn.delhivery_status != "Delivered"
+                ):
+                    try:
+                        from delhivery_integration.invoicing import handle_delivered
+
+                        handle_delivered(dn.name)
+                    except Exception as ie:
+                        frappe.db.rollback()
+                        frappe.log_error(
+                            f"Delhivery auto-invoice error for {dn.name}: {str(ie)}",
+                            "Delhivery Tracking",
+                        )
+
         except Exception as e:
             frappe.log_error(
                 f"Delhivery tracking error for {dn.delhivery_waybill}: {str(e)}",
