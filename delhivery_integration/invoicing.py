@@ -77,7 +77,7 @@ def _create_invoice_from_dn(dn_name, settings):
 def _create_payment_for_si(si, settings):
     from erpnext.accounts.doctype.payment_entry.payment_entry import get_payment_entry
 
-    pe = get_payment_entry("Sales Invoice", si.name, ignore_permissions=True)
+    pe = get_payment_entry("Sales Invoice", si.name)
 
     if settings.default_mode_of_payment:
         pe.mode_of_payment = settings.default_mode_of_payment
