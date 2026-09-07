@@ -91,6 +91,15 @@ def _create_payment_for_si(si, settings):
     if settings.default_cost_center and not pe.cost_center:
         pe.cost_center = settings.default_cost_center
 
+    # ERPNext mandates reference_no + reference_date for bank-type transactions
+    # (payment_entry.validate_transaction_reference); get_payment_entry leaves
+    # them blank. Mirror cowberry_app's delivery-trip payment flow so bank
+    # Payment Entries pass validation.
+    if not pe.reference_no:
+        pe.reference_no = si.name
+    if not pe.reference_date:
+        pe.reference_date = frappe.utils.today()
+
     pe.flags.ignore_permissions = True
     pe.insert(ignore_permissions=True)
 
