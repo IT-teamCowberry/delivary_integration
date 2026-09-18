@@ -1,7 +1,44 @@
 import frappe
 from frappe import _
+from frappe.utils import flt
 
 from delhivery_integration.delhivery_api import DelhiveryAPI
+
+
+def _resolve_cod(dn):
+    """Payment mode + COD amount to send to Delhivery for a Delivery Note.
+
+    CO1-I64: a partially-paid order must collect only what is still pending,
+    not the full order total. The order's split lives on the Delivery Note as
+    `custom_paid_amount` (already paid online) and `custom_cod_amount` (still
+    to collect) — copied from the Sales Order — and always sums to grand_total.
+
+      * Prepaid mode            -> COD 0 (unchanged).
+      * COD, fully unpaid       -> full grand_total (unchanged; also the
+                                   fallback when the split fields are absent).
+      * COD, partially paid     -> only the pending COD amount.
+      * COD, fully paid         -> nothing to collect: COD 0, sent as Prepaid
+                                   (Delhivery rejects a COD shipment of 0).
+
+    Returns (payment_mode, cod_amount_str). `total_amount` in the payload stays
+    the full grand_total — that is the declared shipment value, not the COD.
+    """
+    payment_mode = dn.get("delhivery_payment_mode") or "Prepaid"
+    if payment_mode != "COD":
+        return payment_mode, "0"
+
+    total = flt(dn.grand_total)
+    paid = flt(dn.get("custom_paid_amount"))
+    pending = flt(dn.get("custom_cod_amount"))
+
+    if pending <= 0:
+        # Split not recorded as a COD figure: derive it from what was paid.
+        pending = total - paid if paid > 0 else total
+
+    pending = flt(min(max(pending, 0), total), 2)
+    if pending <= 0:
+        return "Prepaid", "0"
+    return "COD", str(pending)
 
 
 @frappe.whitelist()
@@ -213,8 +250,7 @@ def create_delhivery_shipment(delivery_note):
             ).format(dn.customer)
         )
 
-    payment_mode = dn.get("delhivery_payment_mode") or "Prepaid"
-    cod_amount = str(dn.grand_total) if payment_mode == "COD" else "0"
+    payment_mode, cod_amount = _resolve_cod(dn)
 
     shipment_data = {
         "name": dn.customer_name,
