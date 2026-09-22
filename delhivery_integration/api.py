@@ -254,8 +254,7 @@ def create_delhivery_shipment(delivery_note):
 
     shipment_data = {
         "name": dn.customer_name,
-        "add": address.address_line1 or "",
-        "add2": address.address_line2 or "",
+        "add": ", ".join(filter(None, [address.address_line1, address.address_line2])),
         "pin": address.pincode,
         "city": address.city,
         "state": address.state,
